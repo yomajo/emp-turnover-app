@@ -1,0 +1,8 @@
+__pycache__
+.venv
+.vscode
+.env
+
+instance
+src
+app.log

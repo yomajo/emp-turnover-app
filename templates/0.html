@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/bulma.min.css') }}">
+  <script defer src="{{ url_for('static', filename='js/base.js') }}"></script>
+  {% block head_import %}{% endblock %}
+</head>
+
+<body>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="notification has-text-centered {{ category }}">
+    <button class="delete"></button>
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  <section class="section pt-4">
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+  </section>
+</body>
+
+</html>
