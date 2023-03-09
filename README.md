@@ -15,6 +15,15 @@ Batteries:
 - [Interniet](https://pbs.twimg.com/media/C7i3LftVMAE_mKj.jpg)
 - Python 3.10+
 - pipenv
+- `.env` file:
+
+`.env` example:
+```
+FLASK_APP='app.py'
+FLASK_DEBUG='true'
+ENVIRONMENT='dev'
+SECRET_KEY='sure'
+```
 
 ## Installation Steps
 
