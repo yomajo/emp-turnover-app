@@ -1,8 +1,11 @@
 __pycache__
 .venv
 .vscode
+.ipynb_checkpoints
 .env
 
 instance
 src
 app.log
+helper_notebook.ipynb
+benchmarking

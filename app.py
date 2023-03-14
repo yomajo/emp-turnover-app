@@ -2,7 +2,7 @@ import logging
 from logging import Formatter
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import current_app, Flask, render_template, redirect, url_for, flash
 from sqlalchemy.exc import OperationalError
 import pandas as pd
 
@@ -26,9 +26,9 @@ file_handler.setLevel(logging.DEBUG)
 app.logger.addHandler(file_handler)
 log = logging.getLogger(__name__)
 
+
 @app.route('/')
 def index():
-    log.info('visit home')
     show_setup, show_load_data = False, False
     try:
         co = db.session.query(Company).first()
@@ -51,13 +51,18 @@ def setup_db():
 
 @app.route('/load_data')
 def load_data():
-    load_data_to_database()
-    return 'load_data_to_database - Not implemented yet'
+    load_successful = load_data_to_database(current_app.config['COMPANIES_OF_INTEREST'])
+    if load_successful:
+        return 'All good. Inspect sqlite database'
+    return 'Processing errors. Check logs'
 
 
 @app.route('/companies')
 def after_confirm():
-    return render_template('companies.html')
+    all_companies = db.session.query(Company.id).count()
+    data_companies_ids = db.session.query(Hiring.jar_id).distinct()
+    data_companies = db.session.query(Company).filter(Company.id.in_(data_companies_ids)).all()
+    return render_template('companies.html', all_companies=all_companies, data_companies=data_companies)
 
 
 if __name__ == "__main__":

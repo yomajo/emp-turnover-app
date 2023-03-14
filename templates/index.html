@@ -10,9 +10,9 @@
   
   <div class="level-left">
     <div class="level-item">
-      <button class="button" href="{{ url_for('setup_db') }}">
-        Create database
-      </button>
+      <a href="{{ url_for('setup_db') }}">
+        <button class="button">Create database</button>
+      </a>
     </div>
   </div>
 
@@ -50,9 +50,9 @@
   
   <div class="level-left">
     <div class="level-item">
-      <button class="button" href="{{ url_for('companies') }}">
-        Companies of interest
-      </button>
+      <a href="{{ url_for('companies') }}">
+        <button class="button">Companies of interest</button>
+      </a>
     </div>
   </div>
 
@@ -63,7 +63,6 @@
   </div>
 </div>
 {% endif %}
-
 
 
 {% endblock %}

@@ -1,4 +1,5 @@
 from extensions import db
+from sqlalchemy import UniqueConstraint
 
 
 class Company(db.Model):
@@ -19,7 +20,7 @@ class Sector(db.Model):
     __tablename__ = 'sector'
     
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), unique=True, nullable=False)
+    name = db.Column(db.String(200), unique=True, nullable=False)
     companies = db.relationship('Company', backref='sector')
 
     def __repr__(self) -> str:
@@ -38,6 +39,7 @@ class Bookmark(db.Model):
 
 class Hiring(db.Model):
     __tablename__ = 'hires'
+    __table_args__ = (UniqueConstraint('jar_id', 'date', name='_co_date_hires'),)
 
     id = db.Column(db.Integer, primary_key=True)
     jar_id = db.Column(db.Integer, db.ForeignKey('company.id'))
