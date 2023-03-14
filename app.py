@@ -58,7 +58,7 @@ def load_data():
 
 
 @app.route('/companies')
-def after_confirm():
+def companies():
     all_companies = db.session.query(Company.id).count()
     data_companies_ids = db.session.query(Hiring.jar_id).distinct()
     data_companies = db.session.query(Company).filter(Company.id.in_(data_companies_ids)).all()
