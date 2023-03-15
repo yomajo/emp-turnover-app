@@ -63,10 +63,15 @@ def load_data():
 
 @app.route('/companies')
 def companies():
-    all_companies = db.session.query(Company.id).count()
-    data_companies_ids = db.session.query(Hiring.jar_id).distinct()
-    data_companies = db.session.query(Company).filter(Company.id.in_(data_companies_ids)).all()
-    return render_template('companies.html', all_companies=all_companies, data_companies=data_companies)
+    try:
+        all_companies = db.session.query(Company.id).count()
+        data_companies_ids = db.session.query(Hiring.jar_id).distinct()
+        data_companies = db.session.query(Company).filter(Company.id.in_(data_companies_ids)).all()
+        return render_template('companies.html', all_companies=all_companies, data_companies=data_companies)
+    except OperationalError as e:
+        log.exception(f'Cant access companies. Database not setup? Err: {e}')
+        flash('Database not setup', category='is-danger')
+        return redirect(url_for('index'))
 
 
 @app.route('/company/<int:id>', methods=['GET', 'POST'])
@@ -88,13 +93,20 @@ def company(id):
     dates = [tup[0].strftime('%Y-%m-%d') for tup in data]
     emps = [tup[1] for tup in data]
     daily_turnover = [tup[2] for tup in data]
+
+    hires = sum(filter(lambda x: x>0, daily_turnover))
+    layoffs = abs(sum(filter(lambda x: x<0, daily_turnover)))
+    net_change_pct = round((sum(daily_turnover) / emps[0])*100, 2)
     ctx = {
         'offer_end_date': datetime.today().strftime('%Y-%m-%d'),
         'offer_start_date': dates[0],
         'co': co,
         'dates': dates,
         'emps': emps,
-        'daily_turnover': daily_turnover}
+        'daily_turnover': daily_turnover,
+        'hires': hires,
+        'layoffs': layoffs,
+        'net_change_pct': net_change_pct}
     return render_template('company.html', **ctx)
 
 

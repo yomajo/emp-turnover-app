@@ -10,15 +10,60 @@
 <section class="section">
   <div class="container">
 
-    <article class="article">
-      <h2 class="title is-4">Basic Info</h2>
-      <p>JAR ID: <strong>{{ co.id }}</strong></p>
-      <p>Name: <strong>{{ co.name }}</strong></p>
-      <p>Municipality: <strong>{{ co.municipality }}</strong></p>
-      <p>Sector: <strong>{{ co.sector.name }}</strong></p>
-      <p>Last seen employees on payroll: <strong>{{ co.last_emps }}</strong></p>
-      <p>Latest update: <strong>{{ co.last_date }}</strong></p>
-    </article>
+    <div class="tile is-ancestor">
+      <div class="tile is-parent">
+        <div class="tile is-child box">
+          <h2 class="title is-4">Basic Info</h2>
+          <p>JAR ID: <strong>{{ co.id }}</strong></p>
+          <p>Name: <strong>{{ co.name }}</strong></p>
+          <p>Municipality: <strong>{{ co.municipality }}</strong></p>
+          <p>Sector: <strong>{{ co.sector.name }}</strong></p>
+          <p>Last seen employees on payroll: <strong>{{ co.last_emps }}</strong></p>
+          <p>Latest update: <strong>{{ co.last_date }}</strong></p>
+        </div>
+      </div>
+
+      <div class="tile is-parent">
+        <div class="tile is-child box">
+          <h2 class="title is-4">Select Date Interval</h2>
+          <h3 class="subtitle is-6">By default all available data is displayed. To zoom in, apply date filtering</h3>
+
+          <form method="POST">
+            <div class="field mx-2">
+              <label for="start_date" class="label">From</label>
+              <div class="control has-icons-left">
+                <input type="date" id="start_date" name="start_date" value="{{ offer_start_date }}" min="2018-01-01"
+                  max="{{ offer_end_date }}">
+              </div>
+            </div>
+
+            <div class="field mx-2">
+              <label for="end_date" class="label">To</label>
+              <div class="control has-icons-left">
+                <input type="date" id="end_date" name="end_date" value="{{ offer_end_date }}" min="2018-02-01"
+                  max="{{ offer_end_date }}">
+              </div>
+            </div>
+
+            <input class="button is-dark" type="submit" value="Apply">
+          </form>
+        </div>
+      </div>
+
+      <div class="tile is-parent">
+        <div class="tile is-child box">
+          <h2 class="title is-4">Hires / Layoffs</h2>
+          <p class="mb-2">Stats for period: {{ dates[0] }} - {{ dates[-1] }}</p>
+          <p>Total hired: <strong class="has-text-success">{{ hires }}</strong></p>
+          <p>Total layoffs: <strong class="has-text-danger">{{ layoffs }}</strong></p>
+          <p>Change: 
+            <strong class="{% if net_change_pct<0 %}has-text-danger{% else %}has-text-success{% endif %}">
+              {{ net_change_pct }} %
+          </strong></p>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </section>
@@ -58,36 +103,6 @@
 
   <div class="has-text-centered">
     <canvas id="turnover-chart" style="display: inline; width: 80%; max-height: 500px;"></canvas>
-  </div>
-</section>
-
-
-<section class="section">
-
-  <div class="container">
-    <h2 class="title is-4">Narrow down?</h2>
-    <h3 class="subtitle is-6">By default all available data is displayed. To zoom in, apply date filtering</h3>
-
-    <form method="POST">
-      <div class="field mx-2">
-        <label for="start_date" class="label">From</label>
-        <div class="control has-icons-left">
-          <input type="date" id="start_date" name="start_date" value="{{ offer_start_date }}" min="2019-04-01"
-            max="{{ offer_end_date }}">
-        </div>
-      </div>
-
-      <div class="field mx-2">
-        <label for="end_date" class="label">To</label>
-        <div class="control has-icons-left">
-          <input type="date" id="end_date" name="end_date" value="{{ offer_end_date }}" min="2019-04-01"
-            max="{{ offer_end_date }}">
-        </div>
-      </div>
-
-      <input class="button is-dark" type="submit" value="Apply">
-    </form>
-
   </div>
 </section>
 
