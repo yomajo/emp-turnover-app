@@ -53,7 +53,7 @@ def setup_db():
 @app.route('/load_data')
 def load_data():
     log.info(f'Load data started...')
-    load_successful = load_data_to_database(current_app.config['COMPANIES_OF_INTEREST'])    
+    load_successful = load_data_to_database(current_app.config['COMPANIES_OF_INTEREST'])
     if load_successful:
         flash(f'Companies, sectors data has been loaded and now available for analysis', category='is-success')
         return redirect(url_for('companies'))
@@ -112,7 +112,12 @@ def company(id):
 
 @app.route('/update')
 def update():
-    flash('Update currently not implemented', category='is-danger')
+    log.info(f'Data update started...')
+    load_successful = load_data_to_database(current_app.config['COMPANIES_OF_INTEREST'])
+    if load_successful:
+        flash(f'Data has been updated', category='is-success')
+        return redirect(url_for('companies'))
+    flash('Error occurred when downloading / processing data. Check logs', category='is-danger')
     return redirect(url_for('index'))
 
 

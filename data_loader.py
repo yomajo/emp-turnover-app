@@ -92,14 +92,17 @@ def load_data_to_database(companies_of_interest: list) -> bool:
     previous_file = None
     for dt_str in month_strs(start_date):
         start_this = perf_counter()
+        if data_already_pulled(dt_str):
+            log.warning(f'Skipping update for {dt_str}, database already has entries for this date')
+            continue
         try:
             year, month = dt_str.split('-')
             csv_fname = f'daily-{year}-{month}.csv'
             if os.path.exists(os.path.join(SRC_DIR, csv_fname)):
+                # skip download if file already exists, process file without download
                 log.warning(f'File {csv_fname} alrady downloaded, processing...')
                 process_csv(os.path.join(SRC_DIR, csv_fname), companies_of_interest)
                 previous_file = os.path.join(SRC_DIR, csv_fname)
-                # skip download if file already exists
                 continue
             url = TEMPLATE_URL.replace('YYYY', year).replace('MM', month)
             csv_path = get_csv(url, csv_fname)
@@ -109,8 +112,8 @@ def load_data_to_database(companies_of_interest: list) -> bool:
             # cleanup files
             if previous_file:
                 log.debug(f'Deleting processed data file: {previous_file}')
-                # os.remove(previous_file)
-                log.warning('ACTUAL DELETE SUSPENDED during dev')
+                if current_app.config['DELETE_CSV_FILES']:
+                    os.remove(previous_file)
 
             previous_file = os.path.join(SRC_DIR, csv_fname)
         except NotReleasedError as e:
@@ -121,6 +124,16 @@ def load_data_to_database(companies_of_interest: list) -> bool:
 
     log.info(f'Database for select companies filled in {perf_counter()-start_all:.2f} seconds')
     return True
+
+
+def data_already_pulled(dt_str) -> bool:
+    '''returns True if database already loaded w/ data from dt_str datetime. Arg e.g.: dt_str = '2022-08'
+    NOTE: ignores added companies from first pull'''
+    dt = datetime.strptime(dt_str, '%Y-%m')
+    results = db.session.query(Hiring.id).filter(Hiring.date==dt).all()
+    if results:
+        return True
+    return False
 
 
 def process_csv(csv_fpath: str, companies_of_interest: list) -> None:
