@@ -1,5 +1,5 @@
 from extensions import db
-from sqlalchemy import UniqueConstraint, desc
+from sqlalchemy import UniqueConstraint
 
 
 class Company(db.Model):
