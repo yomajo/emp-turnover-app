@@ -1,5 +1,5 @@
 from extensions import db
-from sqlalchemy import UniqueConstraint
+from sqlalchemy import UniqueConstraint, desc
 
 
 class Company(db.Model):
@@ -11,6 +11,16 @@ class Company(db.Model):
     classifier_id = db.Column(db.Integer, db.ForeignKey('sector.id'))
     hires = db.relationship('Hiring', backref='company')
     bookmark = db.relationship('Bookmark', backref='company')
+
+    @property
+    def last_emps(self):
+        last_hires: Hiring = db.session.query(Hiring).filter(Hiring.jar_id==self.id).order_by(Hiring.date.desc()).first()
+        return last_hires.emps
+
+    @property
+    def last_date(self):
+        last_hires: Hiring = db.session.query(Hiring).filter(Hiring.jar_id==self.id).order_by(Hiring.date.desc()).first()
+        return last_hires.date.strftime('%Y-%m-%d')
 
     def __repr__(self) -> str:
         return f'Company(id={self.id}, name={self.name}, municipality={self.municipality})'

@@ -151,8 +151,10 @@ def get_select_cols_df(csv_fpath: str) -> pd.DataFrame:
 
 def add_sectors_to_db(sectors: pd.DataFrame) -> None:
     '''iterates over rows to adds sectors to database'''
-    log.info(f'Adding sectors...')
-    for _, row in sectors.iterrows():
+    db_sector_ids = [co_tuple[0] for co_tuple in db.session.query(Company.id).all()]
+    new_sectors = sectors[~sectors['sector_id'].isin(db_sector_ids)]
+    log.info(f'Adding new sectors...')
+    for _, row in new_sectors.iterrows():
         sector = Sector(id=row['sector_id'], name=row['sector_name'])
         try:
             db.session.add(sector)
@@ -163,9 +165,12 @@ def add_sectors_to_db(sectors: pd.DataFrame) -> None:
 
 
 def add_companies_to_db(companies: pd.DataFrame) -> None:
-    '''iterates over rows to adds companies to database'''
-    log.info(f'Checking {len(companies.index):,} companies against current db entries, adding...')
-    for _, row in companies.iterrows():
+    '''iterates over rows, adds companies to db if not yet in'''
+    db_co_ids = [co_tuple[0] for co_tuple in db.session.query(Company.id).all()]
+    # filter away companies already in database
+    new_companies = companies[~companies['jar_id'].isin(db_co_ids)]
+    log.info(f'Checking {len(companies.index):,} companies against current {len(db_co_ids)} db entries, adding...')
+    for _, row in new_companies.iterrows():
         co = Company(id=row['jar_id'], name=row['name'],
             municipality=row['municipality'], classifier_id=row['sector_id'],)
         try:

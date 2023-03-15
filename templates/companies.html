@@ -1,18 +1,22 @@
 {% extends "0.html" %}
-{% block title %}Home - Dirty Stats{% endblock %}
+{% block title %}Companies{% endblock %}
 
 {% block content %}
-<div class="article">
-  {{ all_companies }} total companies are present in database universe
-  <p>List of companies available for analysis:</p>
-    <ul>
-      {% for co in data_companies %}
-      <li>{{ co.name }} ({{ co.sector.name }})</li>
-      {% endfor %}
-    </ul>
-</div>
 
+<section class="section my-2">
+  <div class="container">
+    <h2 class="title is-4">List of companies available for analysis:</h2>
 
+    {% for co in data_companies %}
+    <p class="my-1">
+      <strong>
+        <a href="{{ url_for('company', id=co.id) }}">{{ co.name }}</a>
+      </strong>
+    </p>
+    {% endfor %}
 
+  </div>
+
+</section>
 
 {% endblock %}

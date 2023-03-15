@@ -1,0 +1,138 @@
+{% extends "0.html" %}
+{% block title %}{{ co.name }} Data{% endblock %}
+
+{% block head_import %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<section class="section">
+  <div class="container">
+
+    <article class="article">
+      <h2 class="title is-4">Basic Info</h2>
+      <p>JAR ID: <strong>{{ co.id }}</strong></p>
+      <p>Name: <strong>{{ co.name }}</strong></p>
+      <p>Municipality: <strong>{{ co.municipality }}</strong></p>
+      <p>Sector: <strong>{{ co.sector.name }}</strong></p>
+      <p>Last seen employees on payroll: <strong>{{ co.last_emps }}</strong></p>
+      <p>Latest update: <strong>{{ co.last_date }}</strong></p>
+    </article>
+  </div>
+
+</section>
+
+<section class="section">
+
+  <div class="level">
+    <div class="level-left">
+      <h2 class="level-item title is-4">Number of Employees</h2>
+    </div>
+
+    <div class="level-right">
+      <button class="level-item button" disabled title="Not implemented">Download dataset</button>
+    </div>
+
+  </div>
+
+
+  <div class="has-text-centered">
+    <canvas id="emp-chart" style="display: inline; width: 80%; max-height: 500px;"></canvas>
+  </div>
+</section>
+
+
+<section class="section">
+
+  <div class="level">
+    <div class="level-left">
+      <h2 class="level-item title is-4">Employee Turnover</h2>
+    </div>
+
+    <div class="level-right">
+      <button class="level-item button" disabled title="Not implemented">Download dataset</button>
+    </div>
+
+  </div>
+
+  <div class="has-text-centered">
+    <canvas id="turnover-chart" style="display: inline; width: 80%; max-height: 500px;"></canvas>
+  </div>
+</section>
+
+
+<section class="section">
+
+  <div class="container">
+    <h2 class="title is-4">Narrow down?</h2>
+    <h3 class="subtitle is-6">By default all available data is displayed. To zoom in, apply date filtering</h3>
+
+    <form method="POST">
+      <div class="field mx-2">
+        <label for="start_date" class="label">From</label>
+        <div class="control has-icons-left">
+          <input type="date" id="start_date" name="start_date" value="{{ offer_start_date }}" min="2019-04-01"
+            max="{{ offer_end_date }}">
+        </div>
+      </div>
+
+      <div class="field mx-2">
+        <label for="end_date" class="label">To</label>
+        <div class="control has-icons-left">
+          <input type="date" id="end_date" name="end_date" value="{{ offer_end_date }}" min="2019-04-01"
+            max="{{ offer_end_date }}">
+        </div>
+      </div>
+
+      <input class="button is-dark" type="submit" value="Apply">
+    </form>
+
+  </div>
+</section>
+
+
+<script>
+  const empChart = document.getElementById('emp-chart')
+  const turnoverChart = document.getElementById('turnover-chart')
+
+  var empChartObj = new Chart(empChart, {
+    type: 'line',
+    data: {
+      labels: {{ dates | tojson }},
+  datasets: [{
+    label: '# of Employees',
+    data: {{ emps | tojson }},
+    borderWidth: 1,
+      }]
+    },
+  options: {
+    responsive: false,
+      scales: {
+      x: { ticks: { maxTicksLimit: 20 } }
+    }
+  }
+  })
+
+
+  var turnoverChartObj = new Chart(turnoverChart, {
+    type: 'bar',
+    data: {
+      labels: {{ dates | safe }},
+  datasets: [{
+    label: 'Daily net hires',
+    data: {{ daily_turnover | safe }},
+    borderWidth: 1,
+      }]
+    },
+  options: {
+    responsive: false,
+      scales: {
+      x: { ticks: { maxTicksLimit: 20 } }
+    }
+  }
+  })
+
+</script>
+
+{% endblock %}

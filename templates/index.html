@@ -1,68 +1,93 @@
 {% extends "0.html" %}
-{% block title %}Home - Dirty Stats{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
-<h1 class="title is-3">Welcome</h1>
-<p class="subtitle is-5">To begin working with data, there should be...</p>
 
-{% if show_setup %}
-<div class="level">
-  
-  <div class="level-left">
-    <div class="level-item">
-      <a href="{{ url_for('setup_db') }}">
-        <button class="button">Create database</button>
-      </a>
+<section class="section pt-4">
+  <div class="container">
+    <h1 class="title is-3">Welcome</h1>
+    <p class="subtitle is-5">To begin working with data, there should be...</p>
+
+    {% if show_setup %}
+    <div class="level">
+
+      <div class="level-left">
+        <div class="level-item">
+          <a href="{{ url_for('setup_db') }}">
+            <button class="button">Create database</button>
+          </a>
+        </div>
+      </div>
+
+      <div class="level-right">
+        <p class="level-item">
+          Initializes database (single file inside ./instance/ directory)
+        </p>
+      </div>
     </div>
-  </div>
-
-  <div class="level-right">
-    <p class="level-item">
-      Initializes database (single file inside ./instance/ directory)
-    </p>
-  </div>
-</div>
-{% endif %}
+    {% endif %}
 
 
-{% if show_load_data %}
-<div class="level">
-  
-  <div class="level-left">
-    <div class="level-item">
-      <button class="button" onclick="alertOnDuration(event)" href="{{ url_for('load_data') }}">
-        Download and Load Data
-      </button>
+    {% if show_load_data %}
+    <div class="level">
+
+      <div class="level-left">
+        <div class="level-item">
+          <button class="button" onclick="alertOnDuration(event)" href="{{ url_for('load_data') }}">
+            Download and Load Data
+          </button>
+        </div>
+      </div>
+
+      <div class="level-right">
+        <p class="level-item">
+          This downloads and adds target companies data to database for further analysis
+        </p>
+      </div>
     </div>
-  </div>
-
-  <div class="level-right">
-    <p class="level-item">
-      This downloads and adds target companies data to database for further analysis
-    </p>
-  </div>
-</div>
-{% endif %}
+    {% endif %}
 
 
-{% if not show_setup and not show_load_data %}
-<div class="level">
-  
-  <div class="level-left">
-    <div class="level-item">
-      <a href="{{ url_for('companies') }}">
-        <button class="button">Companies of interest</button>
-      </a>
+    {% if not show_setup and not show_load_data %}
+
+    <p class="has-text-success my-2">All packed up and ready</p>
+
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <a href="{{ url_for('companies') }}">
+            <button class="button">Companies of interest</button>
+          </a>
+        </div>
+      </div>
+
+      <div class="level-right">
+        <p class="level-item">
+          See all tracked companies (and add new in future?)
+        </p>
+      </div>
     </div>
-  </div>
 
-  <div class="level-right">
-    <p class="level-item">
-      See all tracked companies (and add new in future?)
-    </p>
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <a href="{{ url_for('update') }}">
+            <button class="button">Update</button>
+          </a>
+        </div>
+      </div>
+
+      <div class="level-right">
+        <p class="level-item">
+          Pull latest data to update tracked companies' data
+        </p>
+      </div>
+    </div>
+
+    {% endif %}
+
   </div>
-</div>
-{% endif %}
+</section>
 
 
 {% endblock %}
