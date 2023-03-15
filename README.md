@@ -9,6 +9,13 @@ Batteries:
 - sqlite
 - pandas
 
+## Screenshots
+
+![screenshot_1](https://user-images.githubusercontent.com/45366313/225350087-3e1bcadc-ff55-4ac8-94fe-d4d1bbadd10f.png)
+
+![screenshot_2](https://user-images.githubusercontent.com/45366313/225350983-a58f919e-1017-4359-bbcb-854091f419cb.png)
+
+
 ## Requirements
 
 - A computer
@@ -43,4 +50,4 @@ To localize virtual environment directory:
 
 `flask run`
 
-Take it away from there...
+Visit `127.0.0.1:5000` in browser and take it away from there...
